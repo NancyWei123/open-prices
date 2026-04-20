@@ -2,10 +2,10 @@ import os
 import shutil
 from decimal import Decimal
 from io import BytesIO
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test import TestCase, override_settings
-from unittest.mock import patch
 from django.urls import reverse
 from PIL import Image
 
@@ -1044,6 +1044,7 @@ class PriceTagCreateApiTest(TestCase):
             response.data["status"],
             proof_constants.PriceTagStatus.linked_to_price.value,
         )
+
     @override_settings(TESTING=False)
     @patch("open_prices.api.proofs.views.async_task")
     def test_price_tag_create_with_ai_runs_async_task(self, mock_async_task):
@@ -1190,7 +1191,7 @@ class PriceTagUpdateApiTest(TestCase):
     @override_settings(TESTING=False)
     @patch("open_prices.api.proofs.views.async_task")
     def test_price_tag_update_with_ai_and_changed_bounding_box_runs_async_task(
-            self, mock_async_task
+        self, mock_async_task
     ):
         response = self.client.patch(
             self.url,
@@ -1213,7 +1214,7 @@ class PriceTagUpdateApiTest(TestCase):
     @override_settings(TESTING=False)
     @patch("open_prices.api.proofs.views.async_task")
     def test_price_tag_update_with_ai_but_same_bounding_box_does_not_run_async_task(
-            self, mock_async_task
+        self, mock_async_task
     ):
         response = self.client.patch(
             self.url,
