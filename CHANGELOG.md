@@ -1,5 +1,80 @@
 # Changelog
 
+## [1.102.0](https://github.com/openfoodfacts/open-prices/compare/v1.101.2...v1.102.0) (2026-04-16)
+
+
+### Features
+
+* **Challenges:** new categories_full field to store the full list of categories (parents + children) ([#1270](https://github.com/openfoodfacts/open-prices/issues/1270)) ([a566f16](https://github.com/openfoodfacts/open-prices/commit/a566f166e761033e0d1a85a89e1ef8d32c4dbaf5))
+* **OpenFoodFacts:** new taxonomy helper method to get the full list of children from a parent list ([#1269](https://github.com/openfoodfacts/open-prices/issues/1269)) ([7486035](https://github.com/openfoodfacts/open-prices/commit/748603569e9abc0bd2c356e3555343c4cb39a6fa))
+
+
+### Technical
+
+* **Challenges:** improve daily update task to update categories_full & ignore past (completed) challenges ([#1275](https://github.com/openfoodfacts/open-prices/issues/1275)) ([8cc69f7](https://github.com/openfoodfacts/open-prices/commit/8cc69f79bf0a966b64e45a53234b2f23a3c57dc1))
+* **Challenges:** match CATEGORY prices on categories_full (instead of categories) ([#1273](https://github.com/openfoodfacts/open-prices/issues/1273)) ([2c1a1a8](https://github.com/openfoodfacts/open-prices/commit/2c1a1a80aa66c454d5ea43c760bde7a157e1b609))
+* **Challenges:** prettier admin display (fieldset, JSON & image formatting) ([#1274](https://github.com/openfoodfacts/open-prices/issues/1274)) ([4be58d9](https://github.com/openfoodfacts/open-prices/commit/4be58d91591b17de4f02758b20f0619c7fa16070))
+* **deps:** pin Django-related package versions (so that dependabot opens PRs on new versions) ([#1278](https://github.com/openfoodfacts/open-prices/issues/1278)) ([d8171ff](https://github.com/openfoodfacts/open-prices/commit/d8171ffd7cd9aa5b26d2ef8f5f3b437876bdd69e))
+* **Products:** move update task queryset to model ([#1276](https://github.com/openfoodfacts/open-prices/issues/1276)) ([63f4976](https://github.com/openfoodfacts/open-prices/commit/63f497642f398a405d2527a1f3163de744720c69))
+
+## [1.101.2](https://github.com/openfoodfacts/open-prices/compare/v1.101.1...v1.101.2) (2026-04-08)
+
+
+### Technical
+
+* fix proxy jump on prod ([#1267](https://github.com/openfoodfacts/open-prices/issues/1267)) ([a9715c7](https://github.com/openfoodfacts/open-prices/commit/a9715c783cd5a3c0df59050076d357d6cf11b304))
+* **Makefile:** Fix 2 spelling typos ([#1263](https://github.com/openfoodfacts/open-prices/issues/1263)) ([29adec6](https://github.com/openfoodfacts/open-prices/commit/29adec6262f3bd8a87878f6e5cfb9478b9c1ad28))
+
+## [1.101.1](https://github.com/openfoodfacts/open-prices/compare/v1.101.0...v1.101.1) (2026-04-07)
+
+
+### Technical
+
+* migrate Open Prices from docker-prod to scaleway-docker-prod-2 ([e5f4001](https://github.com/openfoodfacts/open-prices/commit/e5f40015929e461a3c324524ed4f590be17f334b))
+
+## [1.101.0](https://github.com/openfoodfacts/open-prices/compare/v1.100.0...v1.101.0) (2026-04-03)
+
+
+### Features
+
+* improve image preprocessing for ML models ([#1251](https://github.com/openfoodfacts/open-prices/issues/1251)) ([dd5b4b3](https://github.com/openfoodfacts/open-prices/commit/dd5b4b369a65fb84104640a012c89eaff62eb4c1))
+* **Prices:** API: Filter on product source being null ([#1262](https://github.com/openfoodfacts/open-prices/issues/1262)) ([89934d2](https://github.com/openfoodfacts/open-prices/commit/89934d2d6bb5779fe96da5abf86dc5b63406b5c1))
+
+
+### Bug Fixes
+
+* **Auth:** Add UserAgent header to auth query ([#1254](https://github.com/openfoodfacts/open-prices/issues/1254)) ([9885f4c](https://github.com/openfoodfacts/open-prices/commit/9885f4cef60d49920108cbfab1d27b3217e2702e))
+
+
+### Technical
+
+* **docs:** Remove .env copy instruction from INSTALL.md ([#1238](https://github.com/openfoodfacts/open-prices/issues/1238)) ([c44231b](https://github.com/openfoodfacts/open-prices/commit/c44231b11b56d723ab09f527444e43f3536bb6b0))
+* **docs:** update documentation to reflect manual env load ([#1248](https://github.com/openfoodfacts/open-prices/issues/1248)) ([c71b5bf](https://github.com/openfoodfacts/open-prices/commit/c71b5bfa70d5966b4bc4872c981c950f1ad9a3bc))
+* **docs:** update INSTALL.md and CONTRIBUTING.md to reflect switch to uv ([#1239](https://github.com/openfoodfacts/open-prices/issues/1239)) ([8007c84](https://github.com/openfoodfacts/open-prices/commit/8007c84fcd8b10d58df2e4cea34a0572e824bf47))
+* on deploy, remove django static content before copying it again (fixes admin css) ([#1256](https://github.com/openfoodfacts/open-prices/issues/1256)) ([4042cd6](https://github.com/openfoodfacts/open-prices/commit/4042cd6c6f1d58343d0ed89b86e226dcde236a36))
+* on deploy, remove django static content before copying it again (fixes admin css) (fix) ([#1264](https://github.com/openfoodfacts/open-prices/issues/1264)) ([cad14f6](https://github.com/openfoodfacts/open-prices/commit/cad14f67d3f679695d72dc0029a4ef1b49d28356))
+* **settings:** reflect environment default values in settings.py ([#1249](https://github.com/openfoodfacts/open-prices/issues/1249)) ([39c9d81](https://github.com/openfoodfacts/open-prices/commit/39c9d81f1dd8c3f9250bfa25b77bf8776838527e))
+* **Tests:** homogenize API tests on list ordering & pagination ([#1252](https://github.com/openfoodfacts/open-prices/issues/1252)) ([ad4f9d9](https://github.com/openfoodfacts/open-prices/commit/ad4f9d909af6a259cad28411649df78fb7681e4c))
+
+## [1.100.0](https://github.com/openfoodfacts/open-prices/compare/v1.99.0...v1.100.0) (2026-03-20)
+
+
+### Features
+
+* **Auth:** Support for keycloak tokens ([#1235](https://github.com/openfoodfacts/open-prices/issues/1235)) ([1c7f06b](https://github.com/openfoodfacts/open-prices/commit/1c7f06b2d787b29f409bb955f4959462e25ce9df))
+
+
+### Bug Fixes
+
+* **deploy:** Update Keycloak OIDC config URL to use HTTPS ([#1250](https://github.com/openfoodfacts/open-prices/issues/1250)) ([11d03d5](https://github.com/openfoodfacts/open-prices/commit/11d03d577fcdc641f463e233e792008e7cbb8798))
+* timeout by adding index ([#1199](https://github.com/openfoodfacts/open-prices/issues/1199)) ([197802d](https://github.com/openfoodfacts/open-prices/commit/197802d9bf2738dd54b7f90ccc70be5b24c3b73e))
+
+
+### Technical
+
+* **docs:** Fixing a typo in docker/dev.yml  ([#1240](https://github.com/openfoodfacts/open-prices/issues/1240)) ([7e0c168](https://github.com/openfoodfacts/open-prices/commit/7e0c168a4587fbcd69e4282df16cf5083b7d824a))
+* remove auto-label-merge-conflict action ([#1232](https://github.com/openfoodfacts/open-prices/issues/1232)) ([785fd60](https://github.com/openfoodfacts/open-prices/commit/785fd6080f285e6b20099c5322048dd3e8713cb1))
+
 ## [1.99.0](https://github.com/openfoodfacts/open-prices/compare/v1.98.0...v1.99.0) (2026-02-17)
 
 

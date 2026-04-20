@@ -1,14 +1,15 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import ValidationError
 from django.db import models
-from django.db.models import Case, Count, F, Func, Value, When, signals
+from django.db.models import Case, Count, F, Func, Q, Value, When, signals
 from django.dispatch import receiver
 from django.utils import timezone
 
 from open_prices.challenges import constants as challenge_constants
 from open_prices.challenges import validators as challenge_validators
+from open_prices.common import openfoodfacts as common_openfoodfacts
 from open_prices.common import utils
 from open_prices.locations.models import Location
 
@@ -37,9 +38,37 @@ class ChallengeQuerySet(models.QuerySet):
             )
         )
 
+    def with_extra_fields(self):
+        return self.with_status().annotate(
+            categories_full_count_annotated=Func(
+                F("categories_full"),
+                1,
+                function="array_length",
+                output_field=models.IntegerField(),
+            ),
+            location_count_annotated=Count("locations"),
+        )
+
     def is_ongoing(self):
         return self.with_status().filter(
             status_annotated=challenge_constants.CHALLENGE_STATUS_ONGOING
+        )
+
+    def to_update_in_daily_task(self):
+        """
+        Goal: Choose which challenges stats we want to update.
+        - Data updated? categories_full, price/proof tags, stats
+        - We stop updating ("freeze") completed challenges after a delay
+
+        Usage: see open_prices/common/tasks.py:challenge_tasks
+        """
+        CHALLENGE_COMPLETED_FREEZE_DELAY_IN_DAYS = 7
+        return self.with_status().filter(
+            Q(end_date=None)
+            | Q(
+                end_date__gte=timezone.now().date()
+                - timedelta(days=CHALLENGE_COMPLETED_FREEZE_DELAY_IN_DAYS)
+            )
         )
 
 
@@ -51,8 +80,25 @@ class Challenge(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
-    categories = ArrayField(base_field=models.CharField(), blank=True, default=list)
-    locations = models.ManyToManyField(Location, blank=True)
+    categories = ArrayField(
+        base_field=models.CharField(),
+        blank=True,
+        default=list,
+        help_text="Restrict to one or multiple categories (optional)",
+    )
+    locations = models.ManyToManyField(
+        Location,
+        blank=True,
+        related_name="challenges",
+        help_text="Restrict to one or multiple locations (optional)",
+    )
+
+    categories_full = ArrayField(
+        base_field=models.CharField(),
+        blank=True,
+        default=list,
+        help_text="Full category tags with parents, used for matching & stats (readonly)",
+    )
 
     example_proof_url = models.CharField(max_length=200, blank=True, null=True)
 
@@ -121,6 +167,17 @@ class Challenge(models.Model):
     @property
     def tag(self):
         return f"{challenge_constants.CHALLENGE_TAG_PREFIX}{self.id}"
+
+    def calculate_categories_full(self):
+        categories_full = (
+            common_openfoodfacts.get_taxonomy_children_tags_from_parent_list(
+                taxonomy_type="category",
+                parent_list=self.categories,
+                include_parent_list=True,
+            )
+        )
+        self.categories_full = categories_full
+        self.save(update_fields=["categories_full"])
 
     def location_id_list(self):
         return list(self.locations.values_list("id", flat=True))
@@ -314,6 +371,9 @@ class Challenge(models.Model):
 
 
 @receiver(signals.post_save, sender=Challenge)
-def location_post_create_init_stats(sender, instance, created, **kwargs):
+def challenge_post_create_init_categories_full_and_stats(
+    sender, instance, created, **kwargs
+):
     if created:
-        instance.calculate_stats()
+        instance.calculate_categories_full()
+        instance.calculate_stats()  # init
