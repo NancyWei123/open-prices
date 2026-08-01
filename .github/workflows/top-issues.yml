@@ -1,4 +1,5 @@
-name: Top issues action.
+name: Top issues action
+
 on:
   schedule:
   - cron:  '0 0 */1 * *'
@@ -9,6 +10,12 @@ on:
 #  push:
 #    branches:
 #      - top-issues
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   ShowAndLabelTopIssues:
     name: Display and label top issues.
